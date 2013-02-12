@@ -6,7 +6,7 @@ The game files are writen in a combination of HTML5/Three.js.
 
 ###Software Requirements
 
-* Google's Chrome __To compile__
+* Google's Chrome
 
 * Windows 7/8
 
@@ -21,7 +21,7 @@ The game files are writen in a combination of HTML5/Three.js.
 
 * Nvidia 240 or better
 
-*A retail Kinect __for Xbox 360® sensor__, which includes special USB/power cabling
+* A retail Kinect __for Xbox 360® sensor__, which includes special USB/power cabling
 
 
 ###Instalation
@@ -32,7 +32,7 @@ The game files are writen in a combination of HTML5/Three.js.
 
 3. Install [Node.js](http://nodejs.org/download/)
 
-4. Change the variable 'var socket = io.connect("IPADDRESS:PORT");' in ClientServer/script/main.js to whatever your server ip address is and open the port you desire.
+4. Change the variable "var socket = io.connect("IPADDRESS:PORT");" in ClientServer/script/main.js to whatever your server ip address is and open the port you desire.
 
 5. Run ClientServer\server.js __Note:__ In windows shell "node server"
 
