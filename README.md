@@ -28,9 +28,6 @@ The game files are writen in a combination of HTML5/Three.js.
 
 1. Install [mongodb](http://www.mongodb.org/downloads)   
 You must spcufy whic version 32 bit or 64 bit and which commands, for which windows version etc....
-I see that there is a CreateDB javascrip that you have mad to make some initial db entries?
-But this script is not a part of the server installation instruses?
-Also mongod need to connect to a server, which server?
 
 2. Copy the data folder from the files and place where mongo looks by default. 
 
