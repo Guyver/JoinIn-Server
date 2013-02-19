@@ -22,9 +22,93 @@ g_ctxCurtain.clearRect( 0,0, g_ctxCurtain.canvas.width, g_ctxCurtain.canvas.heig
 g_ctxCurtain.drawImage( img ,0, 0, window.innerWidth, window.innerHeight );
 
 // Global list of joint names.
-var g_jointList = ['head', 'shouldercenter', 'shoulderleft', 'shoulderright', 'elbowleft', 'elbowright',
- 'wristleft', 'wristright', 'handright', 'handleft', 'spine', 'hipright', 'hipleft', 'hipcenter',
- 'kneeright', 'kneeleft', 'ankleleft', 'ankleright', 'footleft', 'footright' ];
+var g_jointList = ['head', 'shouldercenter', 'shoulderleft', 'shoulderright', 'elbowleft', 'elbowright', 'handright', 'handleft', 'spine', 'hipright', 'hipleft',
+ 'kneeright', 'kneeleft', 'footleft', 'footright' ];
+
+ // A default skeleton.
+ var g_kinectDefaultData ={
+     "elbowleft": {
+         "x": -274.7901123046875,
+         "y": 280.0702239990234,
+         "z": 2308.780859375
+     },
+     "head": {
+         "x": 241.60778045654297,
+         "y": 523.9069396972657,
+         "z": 2158.64599609375
+     },
+     "elbowright": {
+         "x": 653.9172607421875,
+         "y": 216.89061584472657,
+         "z": 2262.339697265625
+     },
+     "kneeright": {
+         "x": 281.5267761230469,
+         "y": -634.7611511230468,
+         "z": 2234.8218017578124
+     },
+     "device": "kinect",
+     "shoulderleft": {
+         "x": 8.228845655918121,
+         "y": 304.7044708251953,
+         "z": 2242.640625
+     },
+     "footleft": {
+         "x": -78.25286865234375,
+         "y": -1038.9497192382812,
+         "z": 2347.7722412109374
+     },
+     "hipright": {
+         "x": 255.50746459960936,
+         "y": -175.0600601196289,
+         "z": 2202.8742431640626
+     },
+     "footright": {
+         "x": 280.81434020996096,
+         "y": -1053.9205322265625,
+         "z": 2347.6310791015626
+     },
+     "shoulderright": {
+         "x": 388.03627624511716,
+         "y": 263.89619903564454,
+         "z": 2194.360546875
+     },
+     "handright": {
+         "x": 997.0059692382813,
+         "y": 280.8474090576172,
+         "z": 2333.0134765625
+     },
+     "shouldercenter": {
+         "x": 198.1325653076172,
+         "y": 284.3003356933594,
+         "z": 2218.5005615234377
+     },
+     "spine": {
+         "x": 174.02362518310548,
+         "y": 60.23494758605957,
+         "z": 2217.4669189453125
+     },
+     "kneeleft": {
+         "x": -30.573639106750488,
+         "y": -610.0912719726563,
+         "z": 2241.30546875
+     },
+     "handleft": {
+         "x": -653.9635803222657,
+         "y": 304.9511779785156,
+         "z": 2292.358349609375
+     },
+     "hipleft": {
+         "x": 44.321907424926756,
+         "y": -152.60081939697267,
+         "z": 2229.9922607421877
+     }
+ };
+	
+// A store of previous skeletons
+var g_kinectStore = [];
+
+// A list of limbs.
 var g_limbs = [];
 
 // Loading flags.
@@ -56,7 +140,10 @@ var g_level = 0;
 var g_currentLevelFinished = true;
 
 var g_spawnPoints = [];
+g_spawnPointsById = {};
 var g_goalPoint = new THREE.Vector3( 0,0,0 );
+var g_AntiquePoints = [];
+var g_keyPoint = THREE.Vector3( 0,0,0 );
 
 // Level objects.
 var g_key;
@@ -455,6 +542,7 @@ function loadImages()
 	image_loader.queueDownload( '../img/wallpaper1.jpg' );
 	image_loader.queueDownload( '../img/wallpaper2.jpg' );
 	image_loader.queueDownload( '../img/wallpaper3.jpg' );
+	image_loader.queueDownload( '../img/Maze.png' );
 	
 	image_loader.downloadAll( );
 	

@@ -35,7 +35,7 @@ Level_Manager.prototype.update = function( scene , camera )
 {
 	// Get the Player Manager to update the players.
 	this._player_Manager.update();	
-	
+
 	this._collisionHandler.update( this._player_Manager , scene );
 	
 	switch ( this._cameraType )
@@ -219,7 +219,7 @@ Level_Manager.prototype.loadLevelFour = function()
 					"#........#",
 					"#........#",
 					"#........#",
-					"#...,....#",
+					"#........#",
 					"#........#",
 					"#........#",
 					"##########"
@@ -232,6 +232,7 @@ Level_Manager.prototype.loadLevelFour = function()
 	// Set the player locations.
 	
 	// Place the game objects.
+	this.setCameraType( 3 );
 };
 
 Level_Manager.prototype.loadLevelThree = function()
@@ -240,18 +241,18 @@ Level_Manager.prototype.loadLevelThree = function()
 	g_waiting = false;
 	// Create the walls, ceiling, floors if needed.
 	
-	// Define the map with hash tags.
+	// Define the map with hash tags. s = seeker, h = hider, g = goal.
 	var level = {
 				"map" : [
 					"#########",
 					"#s#.....#",
-					"#.#.#...#",
+					"#.#h#...#",
 					"#.####.##",
-					"#..s....#",
-					"####.####",
 					"#.......#",
+					"####.####",
+					"#...h...#",
 					"#.#####.#",
-					"#.#.g...#",
+					"#h#.g...#",
 					"#########"
 				] 
 	};
@@ -260,5 +261,7 @@ Level_Manager.prototype.loadLevelThree = function()
 	this._scene_manager.createMazeScene( level );
 	
 	this.getPlayer().setSpawnPosition( g_spawnPoints[0] );
+	
+	this.setCameraType( 1 );
 
 };

@@ -144,17 +144,20 @@ Model.prototype.getJoint = function( name ){
 	@Returns:
 
 */
-Model.prototype.setAllJoints = function( playerPos, angle, kinectMap ){
-
+Model.prototype.setAllJoints = function( playerPos, angle, kinectMap )
+{
 	// The kinect pos of the joint to rotate and the Vector to that from the TORSO.
 	var joint  = new THREE.Vector3( 0,0,0 );
 	
 	// The distance of the joint from the torso.
 	var jointFromTorso = new THREE.Vector3( 0,0,0 );
 	// Torso
-	try{
+	try
+	{
 		var torso = new THREE.Vector3( kinectMap[ "spine" ].x, kinectMap[ "spine" ].y, kinectMap[ "spine" ].z );		
-	}catch(err){
+	}
+	catch(err)
+	{
 		var torso = new THREE.Vector3( 0,0,0 );
 	}
 	// The position of the new joint after being translated from the player position.
@@ -175,8 +178,10 @@ Model.prototype.setAllJoints = function( playerPos, angle, kinectMap ){
 
 		// Get the translation.
 		jointFromTorso.sub( joint , torso);
+		
 		// To set the sight node set the angle initally.
-		if( angle != 0.0 ){
+		if( angle != 0.0 )
+		{
 	
 			// The axis we want to rotate about.
 			var axis = new THREE.Vector3( 0, 1, 0 );
@@ -187,11 +192,13 @@ Model.prototype.setAllJoints = function( playerPos, angle, kinectMap ){
 			// Apply the rotation to the sight node.
 			matrix.multiplyVector3( jointFromTorso );			
 		}
+		
 		// Translate the new joint vector from the PLAYERPOS / TORSO.
 		translatedPos = this.translatePos( playerPos, jointFromTorso );
 		
 		// This is to move the center of the player up so their feet are above ground. 50 is the feet.
-		while( translatedPos.y - 50 < 0 ){
+		while( translatedPos.y - 50 < 0 )
+		{
 			// Raise so the feet are on the ground.
 			playerPos.y+=1;
 			// Recalculate.

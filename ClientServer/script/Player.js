@@ -355,13 +355,17 @@ Player.prototype.processCommands = function(  )
 	}
 	
 	var lHand = this._kinectData[ "handleft" ];
-	var rHand = this._kinectData[ "handright" ];
+	var rHand = this._kinectData[ "handright" ];	
 	var torso = this._kinectData[ "spine" ];	
 	var dist = getDistance3D( lHand, rHand );
+	var handsTogether = dist < 300 ? true : false;
 	var distFromTorso = getDistance3D( lHand, torso );
-	var madeHug = ( dist < 300 ) && ( distFromTorso > 300 ) && ( ( lHand.y < ( torso.y + 200 ) ) && ( lHand.y > ( torso.y - 200 ) ) );
+	var handsInFront = distFromTorso > 300 ? true : false;
+	var handsBelowChest = lHand.y < ( torso.y + 500 ) ? true : false;
+	var handsAboveWaist = lHand.y > ( torso.y - 200 ) ? true : false;
+	var madeHug = ( handsTogether ) && ( handsInFront ) &&  ( handsBelowChest  && ( handsAboveWaist ) );
 	
-	if( madeHug && !this._hugged )
+	if( madeHug && !this._hugged && ( g_level == 1 ) )
 	{		
 		sounds[ 1 ].play();
 		this._score += 100;
@@ -369,7 +373,7 @@ Player.prototype.processCommands = function(  )
 		console.log( "I've performed a hug!" );
 		this._hugged = true;
 	}
-	else if( !madeHug )
+	else if( !madeHug && ( dist > 1000 ) )
 	{
 		this._hugged = false;	
 	}
@@ -717,8 +721,8 @@ Player.prototype.setSpawnPosition = function( position ) {
 	@Arguments: N/A	
 	@Returns: 
 */
-Player.prototype.resetPosition = function(  ) {
-
+Player.prototype.resetPosition = function(  ) 
+{
 	var startingPos = new THREE.Vector3( 11214, 1165, 8200 );
 	if( g_level == 2 )this.setPosition( startingPos );
 	else this.setPosition( this._startingPos );

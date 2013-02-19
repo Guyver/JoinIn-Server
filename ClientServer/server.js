@@ -11,101 +11,85 @@ var io = require('./lib/socket.io');
 // I dunno, its Santi's
 var clientsConnected = [];
 // Dummy kinect.
-var kinectData =
-{
-     "leftElbow": 
-	 {
+var kinectData ={
+     "elbowleft": {
          "x": -274.7901123046875,
          "y": 280.0702239990234,
          "z": 2308.780859375
      },
-     "head": 
-	 {
+     "head": {
          "x": 241.60778045654297,
          "y": 523.9069396972657,
          "z": 2158.64599609375
      },
-     "rightElbow": 
-	 {
+     "elbowright": {
          "x": 653.9172607421875,
          "y": 216.89061584472657,
          "z": 2262.339697265625
      },
-     "rightKnee": 
-	 {
+     "kneeright": {
          "x": 281.5267761230469,
          "y": -634.7611511230468,
          "z": 2234.8218017578124
      },
      "device": "kinect",
-     "leftShoulder": 
-	 {
+     "shoulderleft": {
          "x": 8.228845655918121,
          "y": 304.7044708251953,
          "z": 2242.640625
      },
-     "leftFoot": 
-	 {
+     "footleft": {
          "x": -78.25286865234375,
          "y": -1038.9497192382812,
          "z": 2347.7722412109374
      },
-     "rightHip": 
-	 {
+     "hipright": {
          "x": 255.50746459960936,
          "y": -175.0600601196289,
          "z": 2202.8742431640626
      },
-     "rightFoot": 
-	 {
+     "footright": {
          "x": 280.81434020996096,
          "y": -1053.9205322265625,
          "z": 2347.6310791015626
      },
-     "rightShoulder": 
-	 {
+     "shoulderright": {
          "x": 388.03627624511716,
          "y": 263.89619903564454,
          "z": 2194.360546875
      },
-     "rightHand":
-	 {
+     "handright": {
          "x": 997.0059692382813,
          "y": 280.8474090576172,
          "z": 2333.0134765625
      },
-     "neck": 
-	 {
+     "shouldercenter": {
          "x": 198.1325653076172,
          "y": 284.3003356933594,
          "z": 2218.5005615234377
      },
-     "torso": 
-	 {
+     "spine": {
          "x": 174.02362518310548,
          "y": 60.23494758605957,
          "z": 2217.4669189453125
      },
-     "leftKnee": 
-	 {
+     "kneeleft": {
          "x": -30.573639106750488,
          "y": -610.0912719726563,
          "z": 2241.30546875
      },
-     "leftHand": 
-	 {
+     "handleft": {
          "x": -653.9635803222657,
          "y": 304.9511779785156,
          "z": 2292.358349609375
      },
-     "leftHip": 
-	 {
+     "hipleft": {
          "x": 44.321907424926756,
          "y": -152.60081939697267,
          "z": 2229.9922607421877
      }
  };
- 
+	 
 var server = http.createServer( function ( request , response )
  { 
     var filePath = '.' + request.url;
@@ -146,19 +130,16 @@ var server = http.createServer( function ( request , response )
             contentType = 'text/plain';
 			filePath = '.'+request.url;
 			//console.log( "Serving DAE "+request.url ); 
-		case '.wav':// We're serving an image.
+		case '.wav':// We're serving wav audio.
             contentType = 'text/wav';
 			filePath = '.'+request.url;
-			//console.log( "Serving DAE "+request.url ); 
-		case '.mp3':// We're serving an image.
+		case '.mp3':// We're serving mp3 audio.
             contentType = 'text/mp3';
-			filePath = '.'+request.url;
-			//console.log( "Serving DAE "+request.url ); 
+			filePath = '.'+request.url
             break;
-		case '.mp4':// We're serving an image.
+		case '.mp4':// We're serving a video.
             contentType = 'text/mp4';
 			filePath = '.'+request.url;
-			//console.log( "Serving DAE "+request.url ); 
             break;
     }
 	
@@ -196,7 +177,7 @@ var server = http.createServer( function ( request , response )
 });// End of Http create server.
 
 // Listen to the defined server and set the log level.
-var socket = io.listen( server, { 'log level': 2 } );
+var socket = io.listen( server, { 'log level': 2, 'close timeout' : 60*60*24 } );
 	
 // The users data.
 var users = [];	

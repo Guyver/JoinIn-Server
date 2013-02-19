@@ -74,6 +74,7 @@ Collision_Manager.prototype.testCollision = function( player_manager, scene )
 				{
 					player.addInventory( moveableObjects[ index ] );
 					moveableObjects[ index ].position = new THREE.Vector3( 0,0,0 );
+					sounds[1].play();
 				}
 			}
 		}

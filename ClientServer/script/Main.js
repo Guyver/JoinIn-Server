@@ -5,8 +5,9 @@
 */
 
 // Connect to the server.
-var socket = io.connect( '149.153.4.24:8000' );
-//var socket = io.connect( '127.0.0.1:8000' );
+//var socket = io.connect( '149.153.4.24:8000' ); 	// Game Core
+//var socket = io.connect( '127.0.0.1:8000' );		// Local for testing.
+var socket = io.connect( '89.100.116.37:8000' );	// Home server.
 var kinect = new WebSocket("ws://localhost:8181/KinectHtml5");
 var kinectData;
 var kinectStatus;
@@ -27,14 +28,13 @@ kinect.onclose = function ()
 
 // Receive data FROM the server!
 kinect.onmessage = function (evt) 
-{	
-    kinectStatus = "Kinect data received.";
+{    
 	if( !g_levelOnePlayed  )return;
 	
 	var data = {};
     // Get the data in JSON format.
-    jsonObject = eval('(' + evt.data + ')'); 
- 
+    jsonObject = eval('(' + evt.data + ')'); 	
+	
     // Display the skeleton joints.
     for (var i = 0; i < jsonObject.skeletons.length; i++) 
 	{
@@ -43,12 +43,16 @@ kinect.onmessage = function (evt)
             var joint = jsonObject.skeletons[i].joints[j];
 			data[ joint.name] = joint;
 		}
+		kinectStatus = "Kinect data received.";
     }
 	
-	level_Manager.getPlayer()._kinectData = data;
+	if( data[ "spine" ].z < 2000 )
+	{	
+		data = g_kinectDefaultData;
+		kinectStatus = "Default Skeleton. Too close to the kinect.";
+	}
 	
-    // Inform the server about the update.
-    kinect.send("Skeleton updated on: " + (new Date()).toDateString() + ", " + (new Date()).toTimeString());
+	level_Manager.getPlayer()._kinectData = data;    
 };
 
 // Variables for the sugary goodness!
@@ -113,9 +117,9 @@ function init()
 
 function initSound()
 {	
-	sounds[0] = document.getElementById( 'ambient' ) ;
 	sounds[1] = document.getElementById( 'hug' ) ;
 	sounds[2] = document.getElementById( 'error' );
+	sounds[3] = document.getElementById( 'background' );
 };
 
 
@@ -236,8 +240,8 @@ function gameLoop()
 	
 	// delta time / fps
 	g_deltaTime = g_currentTime.getTime() - g_lastTime.getTime();
-	g_fps = g_deltaTime / 1000;
-	
+	g_fps = g_deltaTime / 1000;	
+		
 	// Reset last time to now.
 	g_lastTime = g_currentTime;	
 	
@@ -246,7 +250,10 @@ function gameLoop()
 	if( !g_imagesLoaded ) return;// Waiting for the images to load.
 	
 	if( g_introPlayed ) // Intro video
-	{		
+	{	
+		// Inform the server about the update.
+		kinect.send( "Skeleton updated request on: " + (new Date()).toDateString() + ", " + (new Date()).toTimeString() );
+	
 		if( g_levelOnePlayed  )
 		{	
 			if( g_level == 1 )updateLevelOne( );
@@ -329,7 +336,7 @@ function gameLoop()
 				g_introPlayed = true;
 				// Clear the video canvas.
 				g_canvasVideo.width = window.innerWidth;
-				g_canvasVideo.height = window.innerHeight;
+				g_canvasVideo.height = window.innerHeight;				
 			}
 			else
 			{
@@ -348,6 +355,7 @@ function gameLoop()
 		level_Manager.getPlayer()._userKey = localStorage.userKey;
 		level_Manager.getPlayer().sendData();
 		g_playersLoaded = true;
+		sounds[ 3 ].play();
 		fadeOut();		
 	}	
 	
@@ -407,7 +415,7 @@ function updateLevelThree( fps )
 	level_Manager.update( scene, camera );
 	render();
 	
-	if( getDistance3D( level_Manager.getPlayer().getPosition(), g_goalPoint ) < 500 )
+	if( getDistance3D( level_Manager.getPlayer().getPosition(), g_goalPoint ) < 1500 )
 	{
 		g_reachedMazeGoal = true;
 	}
@@ -621,15 +629,15 @@ function render()
 		}
 		else if( g_level == 3 )
 		{
-			guiCtx.drawImage( image_loader.getAsset( 'congrats.png' ), 1070 ,10 , 256, 128 );
+			guiCtx.drawImage( image_loader.getAsset( 'Maze.png' ), 1070 ,10 , 256, 128 );
 			guiCtx.fillText( 'Level Goal : Find the goal!', 1070, 210 );
-			guiCtx.fillText( 'Distance : '+ parseInt( getDistance3D( level_Manager.getPlayer().getPosition(), g_goalPoint ) ), 1070, 292 );
+			guiCtx.fillText( 'Distance : '+ parseInt( getDistance3D( level_Manager.getPlayer().getPosition(), g_goalPoint ) ), 1070, 262 );
 		}
 		else if( g_level == 4 )
 		{
 			guiCtx.drawImage( image_loader.getAsset( 'congrats.png' ), 1070 ,10 , 256, 128 );
 			guiCtx.fillText( 'Level Goal : No goal!', 1070, 210 );
-			guiCtx.fillText( 'Time taken : '+ g_totalTime, 1070, 292 );
+			guiCtx.fillText( 'Time taken : '+ g_totalTime * -1, 1070, 262 );
 		}
 	}
 };
@@ -688,7 +696,7 @@ function handleKeyEvents( event )
 			level_Manager.setCameraType( cameraType );
 	  		break;
 		case 98:// Num pad 2. Test.
-			level_Manager._player_Manager.playGame();
+			sounds[ 3 ].play();
 	  		break;
 		case 99:// Num pad 3. Third Person.
 			var cameraType = 3;

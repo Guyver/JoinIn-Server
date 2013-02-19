@@ -135,13 +135,33 @@ Scene_Builder.prototype.createScene = function( data, image )
 		else if (data.map[ rows ][ columns ] == 's')
 		{
 			g_spawnPoints.push( new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows ) );
-			this.createSphere(  new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows ) );
+			//this.createSphere(  new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows ) );
 			yPosition = -this._blockSize;
 		}
 		else if (data.map[ rows ][ columns ] == 'g')
 		{
 			g_goalPoint = new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows );
 			this.createSphere(  new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows ) );
+			yPosition = -this._blockSize;
+		}
+		else if (data.map[ rows ][ columns ] == '1')
+		{
+			g_spawnPointsById["1"] = new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows );
+			yPosition = -this._blockSize;
+		}
+		else if (data.map[ rows ][ columns ] == '2')
+		{
+			g_spawnPointsById["2"] = new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows );
+			yPosition = -this._blockSize;
+		}
+		else if (data.map[ rows ][ columns ] == '3')
+		{
+			g_spawnPointsById["3"] = new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows );
+			yPosition = -this._blockSize;
+		}
+		else if (data.map[ rows ][ columns ] == '4')
+		{
+			g_spawnPointsById["4"] = new THREE.Vector3( this._blockSize * columns , 0, this._blockSize * rows );
 			yPosition = -this._blockSize;
 		}
 		else 
