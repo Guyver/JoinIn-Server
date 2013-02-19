@@ -350,15 +350,22 @@ socket.sockets.on( 'connection', function( client )
 	client.on( 'endLevel', function( data ) 
 	{
 		console.log( "Ending current level, called by : "+ client.handshake.address.address );
-		
-		// Find the user who called.
-		keyHolder = users[ client.handshake.address.address ];
-		// Get his team mates' clients.
-		var team = findTeamMates( keyHolder.team );
-		// Find the sockets for the entire team.
-		var sockets = findTeamMatesSockets( team );
-		
-		sendToTeam( sockets, 'nextLevel', { teamMates : team } ); 
+		try
+		{
+			// Find the user who called.
+			keyHolder = users[ client.handshake.address.address ];
+			// Get his team mates' clients.
+			var team = findTeamMates( keyHolder.team );
+			// Find the sockets for the entire team.
+			var sockets = findTeamMatesSockets( team );
+			
+			sendToTeam( sockets, 'nextLevel', { teamMates : team } ); 
+		}
+		catch( error )
+		{
+			console.log( "Ending current level, failed. Caller IP : "+ client.handshake.address.address );
+			client.emit( 'nextLevel', {} );
+		}
 		
 	});
 	
